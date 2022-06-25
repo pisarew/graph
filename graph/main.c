@@ -5,22 +5,24 @@
 #define OPERATOR "+-*/"
 
 int priority(char chr);
-void create_postfix(char* input, node* root, char* output);
+void create_postfix(char* input, char* output);
+int execute(int a, int b, char op);
+int calculate(char* postfix);
 
 int main(int argc, const char * argv[]) {
     char input[50];
     fgets(input, 50, stdin);
     char output[50];
-    node* root = init(0);
-    create_postfix(input, root, output);
+    create_postfix(input, output);
     puts(input);
     puts(output);
+    printf("res = %d", calculate(output));
     return 0;
 }
 
-void create_postfix(char* input, node* root, char* output) {
+void create_postfix(char* input, char* output) {
     int k = 0;
-    
+    node* root = init(0);
     for (int i = 0; i < strlen(input); i++) {
         if (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) {
             output[k] = input[i];
@@ -50,6 +52,7 @@ void create_postfix(char* input, node* root, char* output) {
         root = pop(root);
         k++;
     }
+    destroy(root);
 }
 
 int priority(char chr) {
@@ -73,5 +76,44 @@ int priority(char chr) {
         default:
             break;
     }
+    return result;
+}
+int execute(int a, int b, char op) {
+    double result = 0;
+    switch (op) {
+        case '+':
+            result = a + b;
+            break;
+        case '-':
+            result = a - b;
+            break;
+        case '*':
+            result = a * b;
+            break;
+        case '/':
+            result = a / b;
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+int calculate(char* postfix) {
+    node* root = init(0);
+    for (int i = 0; i < strlen(postfix); i++) {
+        if (postfix[i] <= '9' && postfix[i] >= '0') {
+            root = push(root, postfix[i] - 48);
+            continue;
+        }
+        if (strchr(OPERATOR, postfix[i])) {
+            int a = root->num;
+            root = pop(root);
+            int b = root->num;
+            root = pop(root);
+            root = push(root, execute(b, a, postfix[i]));
+        }
+    }
+    int result = root->num;
+    destroy(root);
     return result;
 }
