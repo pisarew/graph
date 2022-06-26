@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "stack.h"
 #include "double_stack.h"
 
 #define OPERATOR "+-*/"
+#define UNARY_OPERATOR "s"
 
 int priority(char chr);
 void create_postfix(char* input, char* output);
@@ -91,6 +93,18 @@ void create_postfix(char* input, char* output) {
             }
             root = push(root, input[i]);
         }
+        if (input[i] <= 122 && input[i] >= 97) {
+            if (input[i] == 's' && input[i + 1] == 'i') {
+                while (priority('s') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 's');
+            }
+            while (input[i] <= 122 && input[i] >= 97)
+                i++;
+        }
     }
     while (root->num != 0) {
         output[k] = root->num;
@@ -119,6 +133,9 @@ int priority(char chr) {
         case '/':
             result = 2;
             break;
+        case 's':
+            result = 2;
+            break;
         default:
             break;
     }
@@ -138,6 +155,9 @@ double execute(double a, double b, char op) {
             break;
         case '/':
             result = a / b;
+            break;
+        case 's':
+            result = sin(a);
             break;
         default:
             break;
@@ -159,6 +179,11 @@ double calculate(char* postfix) {
             root = d_push(root, d_num);
             continue;
         }
+        if (strchr(UNARY_OPERATOR, postfix[i])) {
+            double a = root->num;
+            root = d_pop(root);
+            root = d_push(root, execute(a, 0, postfix[i]));
+        }
         if (strchr(OPERATOR, postfix[i])) {
             double a = root->num;
             root = d_pop(root);
@@ -166,6 +191,7 @@ double calculate(char* postfix) {
             root = d_pop(root);
             root = d_push(root, execute(b, a, postfix[i]));
         }
+        
     }
     double result = root->num;
     d_destroy(root);
