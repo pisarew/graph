@@ -15,9 +15,13 @@ double calculate(char* postfix);
 void switch_x(char* postfix, double x, char* result);
 void graph(char* postfix);
 
-int main(int argc, const char * argv[]) {
+int main() {
     char input[50];
     fgets(input, 50, stdin);
+    int k = 0;
+    while (input[k] != '\0')
+        k++;
+    input[k] = '\0';
     char output[50];
     create_postfix(input, output);
     puts(input);
@@ -50,11 +54,11 @@ void graph(char* postfix) {
 }
 void switch_x(char* postfix, double x, char* result) {
     int k = 0;
-    for (int i = 0; i < strlen(postfix); i++) {
+    for (unsigned long i = 0; i < strlen(postfix); i++) {
         if (postfix[i] == 'x') {
             char num[20];
             sprintf(num, "%.5f", x);
-            for (int j = 0; j < strlen(num); j++) {
+            for (unsigned long j = 0; j < strlen(num); j++) {
                 result[k] = num[j];
                 k++;
             }
@@ -68,17 +72,22 @@ void switch_x(char* postfix, double x, char* result) {
 void create_postfix(char* input, char* output) {
     int k = 0;
     node* root = init(0);
-    for (int i = 0; i < strlen(input); i++) {
+    for (unsigned long i = 0; i < strlen(input); i++) {
         if (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) {
-            output[k] = input[i];
-            k++;
+            while (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) {
+                output[k] = input[i];
+                i++;
+                k++;
+            }
             output[k] = ' ';
             k++;
         }
         if (input[i] == '(')
             root = push(root, input[i]);
         if (input[i] == ')') {
-            while(root->num != '(') {
+            while(root) {
+                if (root->num == '(')
+                    break;
                 output[k] = root->num;
                 root = pop(root);
                 k++;
@@ -147,7 +156,7 @@ void create_postfix(char* input, char* output) {
                 i++;
         }
     }
-    while (root->num != 0) {
+    while (root) {
         output[k] = root->num;
         root = pop(root);
         k++;
@@ -246,7 +255,7 @@ double execute(double a, double b, char op) {
 }
 double calculate(char* postfix) {
     d_node* root = d_init(0);
-    for (int i = 0; i < strlen(postfix); i++) {
+    for (unsigned long i = 0; i < strlen(postfix); i++) {
         if ((postfix[i] <= '9' && postfix[i] >= '0') || postfix[i] == '.') {
             char num[20];
             int k = 0;
