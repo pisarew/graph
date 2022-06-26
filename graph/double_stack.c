@@ -8,12 +8,16 @@ d_node* d_init(double num) {
     return head;
 }
 d_node* d_push(d_node* head, double num) {
+    if (!head)
+        return NULL;
     d_node* new_head = malloc(sizeof(d_node));
     new_head->num = num;
     new_head->next = head;
     return new_head;
 }
 d_node* d_pop(d_node* head) {
+    if (!head)
+        return NULL;
     d_node* buf = head;
     head = head->next;
     free(buf);

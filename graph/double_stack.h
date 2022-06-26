@@ -2,7 +2,7 @@
 #define MATERIALS_LINTERS_DOUBLE_STACK_H_
 #include <stdlib.h>
 
-typedef struct d_node {
+typedef struct d_node { // Структура для подсчета (отличается от stack.h только типом переменной num)
     double num;
     struct d_node* next;
 } d_node;

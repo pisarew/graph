@@ -29,7 +29,7 @@ int main() {
     graph(output);
     return 0;
 }
-void graph(char* postfix) {
+void graph(char* postfix) { // Процедура отрисовки графика
     double dx = (PI * 4) / 79;
     double x = 0;
     double dy = 2.0 / 24;
@@ -39,9 +39,8 @@ void graph(char* postfix) {
         x = 0;
         for (int j = 0; j < 85; j++) {
             char res[20];
-            switch_x(postfix, x, res);
-            double X = calculate(res);
-//            printf("\ny %lf x %lf\n", x, X);
+            switch_x(postfix, x, res); // Замена Х на число в строке
+            double X = calculate(res); // Подсчер значения в точке
             if ((X <= (y + dy)) && X >= (y - dy))
                 printf("*");
             else
@@ -52,7 +51,7 @@ void graph(char* postfix) {
         y -= dy;
     }
 }
-void switch_x(char* postfix, double x, char* result) {
+void switch_x(char* postfix, double x, char* result) { // Процедура меняет Х на число в строке
     int k = 0;
     for (unsigned long i = 0; i < strlen(postfix); i++) {
         if (postfix[i] == 'x') {
@@ -69,11 +68,11 @@ void switch_x(char* postfix, double x, char* result) {
     }
     result[k] = '\0';
 }
-void create_postfix(char* input, char* output) {
+void create_postfix(char* input, char* output) { // Создание постфиксной записи
     int k = 0;
     node* root = init(0);
     for (unsigned long i = 0; i < strlen(input); i++) {
-        if (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) {
+        if (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) { // Если операнд
             while (input[i] == 'x' || (input[i] <= '9' && input[i] >= '0')) {
                 output[k] = input[i];
                 i++;
@@ -94,7 +93,11 @@ void create_postfix(char* input, char* output) {
             }
             root = pop(root);
         }
-        if (strchr(OPERATOR, input[i])) {
+        if (strchr(OPERATOR, input[i])) { // Если простой оператор
+            if (input[i] == '-' && i == 0)
+                input[i] = '~';
+            if (input[i] == '-' && input[i - 1] == '(')
+                input[i] = '~';
             while (priority(input[i]) < priority(root->num)) {
                 output[k] = root->num;
                 root = pop(root);
@@ -103,8 +106,8 @@ void create_postfix(char* input, char* output) {
             root = push(root, input[i]);
             continue;
         }
-        if (strchr(UNARY_OPERATOR, input[i])) {
-            if (input[i] == 's' && input[i + 1] == 'i') {
+        if (strchr(UNARY_OPERATOR, input[i])) { // Если сложный оператор
+            if (input[i] == 's' && input[i + 1] == 'i') { // Если синус
                 while (priority('s') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -112,7 +115,7 @@ void create_postfix(char* input, char* output) {
                 }
                 root = push(root, 's');
             }
-            if (input[i] == 'c' && input[i + 1] == 'o') {
+            if (input[i] == 'c' && input[i + 1] == 'o') {  // Если косинус
                 while (priority('c') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -120,7 +123,7 @@ void create_postfix(char* input, char* output) {
                 }
                 root = push(root, 'c');
             }
-            if (input[i] == 't') {
+            if (input[i] == 't') { // Если таннгентс
                 while (priority('t') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -128,7 +131,7 @@ void create_postfix(char* input, char* output) {
                 }
                 root = push(root, 't');
             }
-            if (input[i] == 'c' && input[i + 1] == 't') {
+            if (input[i] == 'c' && input[i + 1] == 't') { // Если котангентс
                 while (priority('g') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -136,7 +139,7 @@ void create_postfix(char* input, char* output) {
                 }
                 root = push(root, 'g');
             }
-            if (input[i] == 's' && input[i + 1] == 'q') {
+            if (input[i] == 's' && input[i + 1] == 'q') { // Если квадратный корень
                 while (priority('q') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -144,7 +147,7 @@ void create_postfix(char* input, char* output) {
                 }
                 root = push(root, 'q');
             }
-            if (input[i] == 'l') {
+            if (input[i] == 'l') { // Если натуральный логарифм
                 while (priority('l') < priority(root->num)) {
                     output[k] = root->num;
                     root = pop(root);
@@ -165,7 +168,7 @@ void create_postfix(char* input, char* output) {
     destroy(root);
 }
 
-int priority(char chr) {
+int priority(char chr) { // Функция возвращает приоритет операции
     int result = 0;
     switch (chr) {
         case '(':
@@ -178,7 +181,7 @@ int priority(char chr) {
             result = 1;
             break;
         case '~':
-            result = 1;
+            result = 3;
             break;
         case '*':
             result = 2;
@@ -212,7 +215,7 @@ int priority(char chr) {
     }
     return result;
 }
-double execute(double a, double b, char op) {
+double execute(double a, double b, char op) { // Функция считает
     double result = 0;
     switch (op) {
         case '+':
@@ -253,10 +256,12 @@ double execute(double a, double b, char op) {
     }
     return result;
 }
-double calculate(char* postfix) {
+double calculate(char* postfix) { // Подсчет выражения
     d_node* root = d_init(0);
     for (unsigned long i = 0; i < strlen(postfix); i++) {
-        if ((postfix[i] <= '9' && postfix[i] >= '0') || postfix[i] == '.') {
+        if (!root)
+            return 0;
+        if ((postfix[i] <= '9' && postfix[i] >= '0') || postfix[i] == '.') { // Если операнд
             char num[20];
             int k = 0;
             while ((postfix[i] <= '9' && postfix[i] >= '0') || postfix[i] == '.') {
@@ -268,17 +273,17 @@ double calculate(char* postfix) {
             root = d_push(root, d_num);
             continue;
         }
-        if (postfix[i] == '~') {
+        if (postfix[i] == '~') { // Если унарный минус
             double a = root->num;
             root = d_pop(root);
             root = d_push(root, execute(0, a, '-'));
         }
-        if (strchr(UNARY_OPERATOR, postfix[i])) {
+        if (strchr(UNARY_OPERATOR, postfix[i])) { // Если сложный оператор
             double a = root->num;
             root = d_pop(root);
             root = d_push(root, execute(a, 0, postfix[i]));
         }
-        if (strchr(OPERATOR, postfix[i])) {
+        if (strchr(OPERATOR, postfix[i])) { // Если оператор
             double a = root->num;
             root = d_pop(root);
             double b = root->num;
@@ -287,8 +292,9 @@ double calculate(char* postfix) {
         }
         
     }
-    double result = root->num;
+    double result = 0;
+    if (root)
+        result = root->num;
     d_destroy(root);
-//    printf("\n%lf\n", result);
     return result;
 }
