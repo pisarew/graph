@@ -1,29 +1,29 @@
-#include "stack.h"
+#include "double_stack.h"
 #include <stdlib.h>
 
-node* init(int num) {
-    node* head = malloc(sizeof(node));
+d_node* d_init(double num) {
+    d_node* head = malloc(sizeof(d_node));
     head->num = num;
     head->next = NULL;
     return head;
 }
-node* push(node* head, int num) {
-    node* new_head = malloc(sizeof(node));
+d_node* d_push(d_node* head, double num) {
+    d_node* new_head = malloc(sizeof(d_node));
     new_head->num = num;
     new_head->next = head;
     return new_head;
 }
-node* pop(node* head) {
-    node* buf = head;
+d_node* d_pop(d_node* head) {
+    d_node* buf = head;
     head = head->next;
     free(buf);
     return head;
 }
-void destroy(node* head) {
+void d_destroy(d_node* head) {
     if (!head)
         return;
     while (head->next) {
-        struct node* buf = head;
+        struct d_node* buf = head;
         head = head->next;
         free(buf);
     }
