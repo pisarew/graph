@@ -5,7 +5,8 @@
 #include "double_stack.h"
 
 #define OPERATOR "+-*/"
-#define UNARY_OPERATOR "s"
+#define UNARY_OPERATOR "sctgql"
+#define PI 3.141592
 
 int priority(char chr);
 void create_postfix(char* input, char* output);
@@ -25,19 +26,18 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 void graph(char* postfix) {
-    const double pi = 3.14;
-    double dx = (pi * 4) / 79;
+    double dx = (PI * 4) / 79;
     double x = 0;
     double dy = 2.0 / 24;
     double y = 1;
     for (int i = 0; i < 25; i++) {
-        dx = (pi * 4) / 80;
+        dx = (PI * 4) / 80;
         x = 0;
         for (int j = 0; j < 85; j++) {
             char res[20];
             switch_x(postfix, x, res);
             double X = calculate(res);
-//            printf("\ny %lf x %lf\n", dy, X);
+//            printf("\ny %lf x %lf\n", x, X);
             if ((X <= (y + dy)) && X >= (y - dy))
                 printf("*");
             else
@@ -92,6 +92,7 @@ void create_postfix(char* input, char* output) {
                 k++;
             }
             root = push(root, input[i]);
+            continue;
         }
         if (input[i] <= 122 && input[i] >= 97) {
             if (input[i] == 's' && input[i + 1] == 'i') {
@@ -101,6 +102,46 @@ void create_postfix(char* input, char* output) {
                     k++;
                 }
                 root = push(root, 's');
+            }
+            if (input[i] == 'c' && input[i + 1] == 'o') {
+                while (priority('c') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 'c');
+            }
+            if (input[i] == 't') {
+                while (priority('t') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 't');
+            }
+            if (input[i] == 'c' && input[i + 1] == 't') {
+                while (priority('g') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 'g');
+            }
+            if (input[i] == 's' && input[i + 1] == 'q') {
+                while (priority('q') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 'q');
+            }
+            if (input[i] == 'l') {
+                while (priority('l') < priority(root->num)) {
+                    output[k] = root->num;
+                    root = pop(root);
+                    k++;
+                }
+                root = push(root, 'l');
             }
             while (input[i] <= 122 && input[i] >= 97)
                 i++;
@@ -136,6 +177,21 @@ int priority(char chr) {
         case 's':
             result = 2;
             break;
+        case 'c':
+            result = 2;
+            break;
+        case 't':
+            result = 2;
+            break;
+        case 'g':
+            result = 2;
+            break;
+        case 'q':
+            result = 2;
+            break;
+        case 'l':
+            result = 2;
+            break;
         default:
             break;
     }
@@ -158,6 +214,21 @@ double execute(double a, double b, char op) {
             break;
         case 's':
             result = sin(a);
+            break;
+        case 'c':
+            result = cos(a);
+            break;
+        case 't':
+            result = tan(a);
+            break;
+        case 'g':
+            result = (tan((PI / 2 - a)) * (-1));
+            break;
+        case 'q':
+            result = sqrt(a);
+            break;
+        case 'l':
+            result = log(a);
             break;
         default:
             break;
