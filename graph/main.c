@@ -4,7 +4,7 @@
 #include "stack.h"
 #include "double_stack.h"
 
-#define OPERATOR "+-*/"
+#define OPERATOR "+-*/^~"
 #define UNARY_OPERATOR "sctgql"
 #define PI 3.141592
 
@@ -94,7 +94,7 @@ void create_postfix(char* input, char* output) {
             root = push(root, input[i]);
             continue;
         }
-        if (input[i] <= 122 && input[i] >= 97) {
+        if (strchr(UNARY_OPERATOR, input[i])) {
             if (input[i] == 's' && input[i + 1] == 'i') {
                 while (priority('s') < priority(root->num)) {
                     output[k] = root->num;
@@ -168,10 +168,16 @@ int priority(char chr) {
         case '-':
             result = 1;
             break;
+        case '~':
+            result = 1;
+            break;
         case '*':
             result = 2;
             break;
         case '/':
+            result = 2;
+            break;
+        case '^':
             result = 2;
             break;
         case 's':
@@ -212,6 +218,9 @@ double execute(double a, double b, char op) {
         case '/':
             result = a / b;
             break;
+        case '^':
+            result = pow(a, b);
+            break;
         case 's':
             result = sin(a);
             break;
@@ -249,6 +258,11 @@ double calculate(char* postfix) {
             double d_num = atof(num);
             root = d_push(root, d_num);
             continue;
+        }
+        if (postfix[i] == '~') {
+            double a = root->num;
+            root = d_pop(root);
+            root = d_push(root, execute(0, a, '-'));
         }
         if (strchr(UNARY_OPERATOR, postfix[i])) {
             double a = root->num;
