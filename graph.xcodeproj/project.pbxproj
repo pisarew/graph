@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2F6AB6D028672F370065C1E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F6AB6CF28672F370065C1E8 /* main.c */; };
 		2F6AB6D8286731310065C1E8 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F6AB6D6286731310065C1E8 /* stack.c */; };
+		F794D5DC2868B40E00842C3C /* double_stack.c in Sources */ = {isa = PBXBuildFile; fileRef = F794D5DB2868B40E00842C3C /* double_stack.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,8 @@
 		2F6AB6CF28672F370065C1E8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		2F6AB6D6286731310065C1E8 /* stack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stack.c; sourceTree = "<group>"; };
 		2F6AB6D7286731310065C1E8 /* stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
+		F794D5DA2868B40E00842C3C /* double_stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = double_stack.h; sourceTree = "<group>"; };
+		F794D5DB2868B40E00842C3C /* double_stack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = double_stack.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +64,8 @@
 			isa = PBXGroup;
 			children = (
 				2F6AB6CF28672F370065C1E8 /* main.c */,
+				F794D5DA2868B40E00842C3C /* double_stack.h */,
+				F794D5DB2868B40E00842C3C /* double_stack.c */,
 				2F6AB6D6286731310065C1E8 /* stack.c */,
 				2F6AB6D7286731310065C1E8 /* stack.h */,
 			);
@@ -125,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F6AB6D8286731310065C1E8 /* stack.c in Sources */,
+				F794D5DC2868B40E00842C3C /* double_stack.c in Sources */,
 				2F6AB6D028672F370065C1E8 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
