@@ -19,7 +19,7 @@ int main() {
     char input[50];
     fgets(input, 50, stdin);
     int k = 0;
-    while (input[k] != '\0')
+    while (input[k] != '\n')
         k++;
     input[k] = '\0';
     char output[50];
@@ -157,6 +157,7 @@ void create_postfix(char* input, char* output) { // Создание постф�
             }
             while (input[i] <= 122 && input[i] >= 97)
                 i++;
+            i--;
         }
     }
     while (root) {
@@ -181,7 +182,7 @@ int priority(char chr) { // Функция возвращает приорите
             result = 1;
             break;
         case '~':
-            result = 3;
+            result = 1;
             break;
         case '*':
             result = 2;
@@ -193,22 +194,22 @@ int priority(char chr) { // Функция возвращает приорите
             result = 2;
             break;
         case 's':
-            result = 2;
+            result = 3;
             break;
         case 'c':
-            result = 2;
+            result = 3;
             break;
         case 't':
-            result = 2;
+            result = 3;
             break;
         case 'g':
-            result = 2;
+            result = 3;
             break;
         case 'q':
-            result = 2;
+            result = 3;
             break;
         case 'l':
-            result = 2;
+            result = 3;
             break;
         default:
             break;
@@ -259,8 +260,6 @@ double execute(double a, double b, char op) { // Функция считает
 double calculate(char* postfix) { // Подсчет выражения
     d_node* root = d_init(0);
     for (unsigned long i = 0; i < strlen(postfix); i++) {
-        if (!root)
-            return 0;
         if ((postfix[i] <= '9' && postfix[i] >= '0') || postfix[i] == '.') { // Если операнд
             char num[20];
             int k = 0;
@@ -293,8 +292,7 @@ double calculate(char* postfix) { // Подсчет выражения
         
     }
     double result = 0;
-    if (root)
-        result = root->num;
+    result = root->num;
     d_destroy(root);
     return result;
 }
